@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
-const rateLimit = require('express-rate-limit');
 const userRoutes = require('./routes/users');
 const movieRoutes = require('./routes/movies');
 const { createUser, signIn, signOut } = require('./controllers/users');
@@ -12,13 +11,9 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-error');
 const globalErrorHandler = require('./middlewares/global-error-handler');
+const limiter = require('./middlewares/rate-limiter');
 
 const { PORT = 3000, MONGODB_SERVER_URL, NODE_ENV } = process.env;
-
-const limiter = rateLimit({
-  windowsMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 const app = express();
 mongoose.connect(NODE_ENV === 'production' ? MONGODB_SERVER_URL : 'mongodb://localhost:27017/moviesdb');
