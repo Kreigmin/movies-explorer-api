@@ -13,7 +13,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-error');
 const globalErrorHandler = require('./middlewares/global-error-handler');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGODB_SERVER_URL, NODE_ENV } = process.env;
 
 const limiter = rateLimit({
   windowsMs: 15 * 60 * 1000,
@@ -21,7 +21,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/moviesdb');
+mongoose.connect(NODE_ENV === 'production' ? MONGODB_SERVER_URL : 'mongodb://localhost:27017/moviesdb');
 
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
