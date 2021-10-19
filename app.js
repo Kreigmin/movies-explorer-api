@@ -11,8 +11,8 @@ const { createUser, signIn, signOut } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-error');
+const globalErrorHandler = require('./middlewares/global-error-handler');
 
-const BASE_ERROR_CODE = 500;
 const { PORT = 3000 } = process.env;
 
 const limiter = rateLimit({
@@ -21,7 +21,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect('mongodb://localhost:27017/moviesdb');
 
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
@@ -66,12 +66,6 @@ app.use(errorLogger);
 
 app.use(errors());
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = BASE_ERROR_CODE, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === BASE_ERROR_CODE ? 'На сервере произошла ошибка' : message,
-  });
-});
+app.use(globalErrorHandler);
 
 app.listen(PORT);
