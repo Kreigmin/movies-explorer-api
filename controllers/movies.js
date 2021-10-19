@@ -7,7 +7,7 @@ const NotFoundError = require('../errors/not-found-error');
 
 const getAllMovies = (req, res, next) => {
   Movie.find({})
-    .then((cards) => res.status(200).send({ cards }))
+    .then((movies) => res.status(200).send({ movies }))
     .catch(next);
 };
 
@@ -54,8 +54,8 @@ const deleteMovie = (req, res, next) => {
   const objectMovieId = mongoose.Types.ObjectId(movieId);
   Movie.findById(movieId)
     .orFail(new Error('NotFoundMovieId'))
-    .then((card) => {
-      if (req.user._id !== card.owner) {
+    .then((movie) => {
+      if (req.user._id !== movie.owner.toString()) {
         return next(new ForbiddenError('Нельзя удалять чужой фильм.'));
       }
       return Movie.deleteOne(objectMovieId)
