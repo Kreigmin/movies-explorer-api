@@ -104,8 +104,7 @@ const signOut = (req, res, next) => {
     res.cookie('jwt', '', {
       maxAge: 1,
       httpOnly: true,
-      sameSite: 'None',
-      secure: true,
+      sameSite: true,
     });
   } catch (err) {
     return next(new Error('С токеном что-то не так.'));
