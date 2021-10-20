@@ -41,7 +41,7 @@ const createMovie = (req, res, next) => {
     .then((movie) => res.status(201).send({ movie }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
+        return next(new BadRequestError('Переданы некорректные данные при создании фильма.'));
       }
       return next(err);
     });
@@ -66,7 +66,7 @@ const deleteMovie = (req, res, next) => {
         return next(new NotFoundError('Фильм с указанным id не найден.'));
       }
       if (err.name === 'CastError') {
-        return next(new BadRequestError('Переданы некорректные данные для удаления карточки.'));
+        return next(new BadRequestError('Переданы некорректные данные для удаления фильма.'));
       }
       return next(err);
     });
