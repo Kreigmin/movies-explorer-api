@@ -37,7 +37,7 @@ app.post('/signup',
   }),
   createUser);
 
-app.post('/signin',
+app.post('/api/signin',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().email().required(),
@@ -46,12 +46,12 @@ app.post('/signin',
   }),
   signIn);
 
-app.post('/signout', signOut);
+app.post('/api/signout', signOut);
 
 app.use(auth);
 
-app.use(userRoutes);
-app.use(movieRoutes);
+app.use('/api', userRoutes);
+app.use('/api', movieRoutes);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
