@@ -16,9 +16,9 @@ const validateUrl = (value) => {
   return value;
 };
 
-router.get('/movies', getAllMovies);
+router.get('/api/movies', getAllMovies);
 
-router.post('/movies',
+router.post('/api/movies',
   celebrate({
     body: Joi.object().keys({
       country: Joi.string().required(),
@@ -31,13 +31,12 @@ router.post('/movies',
       thumbnail: Joi.string().required().custom(validateUrl),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
-      movieId: Joi.string().length(24).hex().required(),
-      owner: Joi.string().length(24).hex(),
+      movieId: Joi.number().required(),
     }),
   }),
   createMovie);
 
-router.delete('/movies/:movieId',
+router.delete('/api/movies/:movieId',
   celebrate({
     params: Joi.object().keys({
       movieId: Joi.string().length(24).hex(),
