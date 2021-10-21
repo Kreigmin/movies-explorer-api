@@ -61,11 +61,11 @@ const updateUserInfo = (req, res, next) => {
       if (err.message === 'NotFoundUserId') {
         return next(new NotFoundError('Пользователь по указанному _id не найден.'));
       }
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        return next(new ConflictError('Данный email уже существует.'));
+      }
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
-      }
-      if (err.name === 'CastError') {
-        return next(new BadRequestError('Передан некорректный id пользователя.'));
       }
       return next(err);
     });
