@@ -5,11 +5,12 @@ const router = express.Router();
 const {
   getUser,
   updateUserInfo,
+  signOut,
 } = require('../controllers/users');
 
-router.get('/users/me', getUser);
+router.get('/api/users/me', getUser);
 
-router.patch('/users/me',
+router.patch('/api/users/me',
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().min(2).max(30).required(),
@@ -17,5 +18,7 @@ router.patch('/users/me',
     }),
   }),
   updateUserInfo);
+
+router.post('/api/signout', signOut);
 
 module.exports = router;
