@@ -3,10 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const { celebrate, Joi, errors } = require('celebrate');
-const userRoutes = require('./routes/users');
-const movieRoutes = require('./routes/movies');
-const { createUser, signIn, signOut } = require('./controllers/users');
+const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-error');
@@ -27,31 +24,12 @@ app.use(requestLogger);
 
 app.use(limiter);
 
-app.post('/signup',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().min(2).max(30).required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(8).required(),
-    }),
-  }),
-  createUser);
-
-app.post('/api/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(8).required(),
-    }),
-  }),
-  signIn);
-
-app.post('/api/signout', signOut);
+app.use(require('./routes/account'));
 
 app.use(auth);
 
-app.use('/api', userRoutes);
-app.use('/api', movieRoutes);
+app.use(require('./routes/users'));
+app.use(require('./routes/movies'));
 
 app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
