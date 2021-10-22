@@ -1,1 +1,10 @@
-# movies-explorer-api
+# API film explorer
+
+### Интро
+Основное api для проекта film explorer. Сервер создан и работает на сервисе Яндекс.Облако. Созданы схемы и модели для user и movie. Созданы все контроллеры и роуты ко всем эндпоинтам. Api и Frontend располагаются на одном домене.
+
+## Ссылки
+
+* Домен api: bestest-movies.nomoredomains.monster/api/
+* Публичный IP адрес: 178.154.216.73
+
