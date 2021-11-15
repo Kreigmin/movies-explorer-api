@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Movie = require('../models/movie');
 const BadRequestError = require('../errors/bad-request-error');
 const ForbiddenError = require('../errors/forbidden-error');
@@ -49,13 +50,14 @@ const createMovie = (req, res, next) => {
 
 const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
+  const objectMovieId = mongoose.Types.ObjectId(movieId)
   Movie.findById(movieId)
     .orFail(new Error('NotFoundMovieId'))
     .then((movie) => {
       if (req.user._id !== movie.owner.toString()) {
         return next(new ForbiddenError('Нельзя удалять чужой фильм.'));
       }
-      return Movie.deleteOne(movie.owner)
+      return Movie.deleteOne({_id: objectMovieId})
         .then(() => {
           res.status(200).send({ message: 'Фильм удалён.' });
         })
